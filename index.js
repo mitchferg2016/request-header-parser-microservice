@@ -1,6 +1,4 @@
-// index.js
 // where your node app starts
-
 // init project
 require('dotenv').config();
 var express = require('express');
@@ -15,13 +13,28 @@ app.use(cors({ optionsSuccessStatus: 200 })); // some legacy browsers choke on 2
 app.use(express.static('public'));
 
 // http://expressjs.com/en/starter/basic-routing.html
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-// your first API endpoint...
-app.get('/api/hello', function (req, res) {
+// your first API endpoint.
+app.get('/api/hello', function(req, res) {
   res.json({ greeting: 'hello API' });
+});
+
+// your second API endpoint for /api/whoami
+app.get('/api/whoami', function(req, res) {
+  // Get the client's IP address, language, and software from request headers
+  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  const language = req.headers['accept-language'].split(',')[0];
+  const software = req.headers['user-agent'];
+
+  // Send the response as JSON
+  res.json({
+    ipaddress: ip,
+    language: language,
+    software: software
+  });
 });
 
 // listen for requests :)
